@@ -5,10 +5,10 @@ import numpy as np
 app = Flask(__name__)
 
 # Load pre-trained models
-mlp_model = joblib.load('.venv/Nhom13/MLP.pkl')
-lr_model = joblib.load('.venv/Nhom13/lr_model.pkl')
-ridge_model = joblib.load('.venv/Nhom13/ridge_model.pkl')
-stacking_model = joblib.load('.venv/Nhom13/Stacking.pkl')
+mlp_model = joblib.load('MLP.pkl')
+lr_model = joblib.load('lr_model.pkl')
+ridge_model = joblib.load('ridge_model.pkl')
+stacking_model = joblib.load('Stacking.pkl')
 @app.route('/')
 def home():
     return render_template('index.html')
