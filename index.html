@@ -75,9 +75,6 @@
         <label for="motherHeight">Chiều cao của mẹ (cm)</label>
         <input type="number" id="motherHeight" name="motherHeight" placeholder="Nhập chiều cao của mẹ" required aria-required="true" aria-label="Chiều cao của mẹ" min="100" max="250">
 
-        <label for="numChildren">Số lượng con</label>
-        <input type="number" id="numChildren" name="numChildren" placeholder="Nhập số lượng con" required aria-required="true" aria-label="Số lượng con" min="1">
-
         <label for="model">Phương pháp dự đoán:</label>
         <select name="model" id="model" required aria-required="true" aria-label="Chọn phương pháp dự đoán">
             <option value="LinearRegression">Linear Regression</option>
@@ -108,12 +105,11 @@
                 var formData = {
                     father_height: $('#fatherHeight').val(),
                     mother_height: $('#motherHeight').val(),
-                    num_children: $('#numChildren').val(),
                     model: $('#model').val()
                 };
 
                 // Validate input
-                if (!formData.father_height || !formData.mother_height || !formData.num_children || !formData.model) {
+                if (!formData.father_height || !formData.mother_height || !formData.model) {
                     $('#error').text('Vui lòng nhập đầy đủ thông tin!');
                     $('#loading').hide();
                     return;
@@ -125,7 +121,7 @@
                     
                     if (data.heights && data.heights.length > 0) {
                         data.heights.forEach(function(height, index) {
-                            $('#result').append('<p>Con thứ ' + (index + 1) + ': ' + height.toFixed(2) + ' cm</p>');
+                            $('#result').append('<p>Chiều cao dự đoán: ' + height.toFixed(2) + ' cm</p>');
                         });
                     } else {
                         $('#error').text('Không có dự đoán nào được trả về.');
