@@ -16,10 +16,7 @@ def home():
 def predict():
     father_height = float(request.form['father_height'])
     mother_height = float(request.form['mother_height'])
-    num_children = int(request.form['num_children'])
     model_choice = request.form['model']
-    if num_children < 1:
-        return jsonify({'Số lượng con cái it nhất 1 đứa'}), 400
     if model_choice == 'LinearRegression':
         model = lr_model
     elif model_choice == 'RidgeRegression':
@@ -31,9 +28,8 @@ def predict():
     else:
         return jsonify({'Mô hình được chọn không hợp lệ!'}), 400
     predictions = []
-    for _ in range(num_children): # type: ignore
-        pred_height = model.predict(np.array([[father_height, mother_height]]).reshape(1, -1))
-        predictions.append(pred_height[0])
+    pred_height = model.predict(np.array([[father_height, mother_height]]).reshape(1, -1))
+    predictions.append(pred_height[0])
     return jsonify({'heights': predictions})
 
 if __name__ == '__main__':
