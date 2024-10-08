@@ -11,7 +11,7 @@ ridge_model = joblib.load('ridge_model.pkl')
 stacking_model = joblib.load('Stacking.pkl')
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('templates/index.html')
 @app.route('/predict', methods=['POST'])
 def predict():
     father_height = float(request.form['father_height'])
