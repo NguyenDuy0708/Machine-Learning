@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dự đoán chiều cao</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            background-color: #f9f9f9;
+            line-height: 1.6;
+        }
+        form {
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+        input, select {
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result, .error {
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+        .loading {
+            font-style: italic;
+            color: #666;
+        }
+        @media (max-width: 600px) {
+            body {
+                margin: 20px;
+            }
+            input, select {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Dự đoán chiều cao của con</h1>
+    <form id="heightForm" aria-labelledby="form-heading">
+        <label for="fatherHeight">Chiều cao của cha (cm)</label>
+        <input type="number" id="fatherHeight" name="fatherHeight" placeholder="Nhập chiều cao của cha" required aria-required="true" aria-label="Chiều cao của cha" min="100" max="250">
+
+        <label for="motherHeight">Chiều cao của mẹ (cm)</label>
+        <input type="number" id="motherHeight" name="motherHeight" placeholder="Nhập chiều cao của mẹ" required aria-required="true" aria-label="Chiều cao của mẹ" min="100" max="250">
+
+        <label for="model">Phương pháp dự đoán:</label>
+        <select name="model" id="model" required aria-required="true" aria-label="Chọn phương pháp dự đoán">
+            <option value="LinearRegression">Linear Regression</option>
+            <option value="RidgeRegression">Ridge Regression</option>
+            <option value="NeuralNetwork">Neural Network</option>
+            <option value="Stacking">Stacking</option>
+        </select><br />
+
+        <button type="submit">Dự đoán</button>
+    </form>
+
+    <div class="loading" id="loading" style="display:none;">Đang xử lý dự đoán...</div>
+    <div class="result" id="result"></div>
+    <div class="error" id="error"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#heightForm').on('submit', function(event) {
+                event.preventDefault();
+
+                // Clear previous results and errors
+                $('#result').empty();
+                $('#error').empty();
+                $('#loading').show();
+
+                // Get form data
+                var formData = {
+                    father_height: $('#fatherHeight').val(),
+                    mother_height: $('#motherHeight').val(),
+                    model: $('#model').val()
+                };
+
+                // Validate input
+                if (!formData.father_height || !formData.mother_height || !formData.model) {
+                    $('#error').text('Vui lòng nhập đầy đủ thông tin!');
+                    $('#loading').hide();
+                    return;
+                }
+
+                // Send data to server
+                $.post('/predict', formData, function(data) {
+                    $('#loading').hide();
+                    
+                    if (data.heights && data.heights.length > 0) {
+                        data.heights.forEach(function(height, index) {
+                            $('#result').append('<p>Chiều cao dự đoán: ' + height.toFixed(2) + ' cm</p>');
+                        });
+                    } else {
+                        $('#error').text('Không có dự đoán nào được trả về.');
+                    }
+                }).fail(function() {
+                    $('#loading').hide();
+                    $('#error').text('Có lỗi xảy ra khi xử lý dự đoán. Vui lòng thử lại.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
