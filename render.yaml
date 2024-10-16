@@ -3,6 +3,7 @@ services:
 - type: web
   name: Height-Predict
   runtime: python
+  pythonVersion: 3.10.11
   repo: https://github.com/NguyenDuy0708/Machine-Learning
   plan: free
   envVars:
@@ -11,5 +12,5 @@ services:
   region: oregon
   buildCommand: pip install -r requirements.txt
   startCommand: python app.py
-  pythonVersion: 3.10.11
+  
 version: "1"
